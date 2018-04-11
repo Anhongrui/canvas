@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+    <style>
+        html,body{
+            margin: 0;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            cursor: none;
+            background-color: black;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas">
+
+</canvas>
+<script>
+    //准备工作
+    var ctx=document.getElementById("canvas"),
+            content = ctx.getContext('2d'),
+            round=[],
+            WIDTH,
+            HEIGHT,
+            initRoundPopulation = 80;
+    //获取屏幕的宽高
+    WIDTH=document.documentElement.clientWidth;
+    HEIGHT=document.documentElement.clientHeight;
+    //设置canvas的宽高
+    ctx.width=WIDTH;
+    ctx.height=HEIGHT;
+    //利用构造函数随机出一个小圆
+    function Round_item(index,x,y){
+        this.index=index;
+        this.x=x;
+        this.y=y;
+        this.r=Math.random()*2+1;
+        var alpha =(Math.floor(Math.random()*10)+1)/10/2;
+        this.color = "rgba(255,255,255," + alpha + ")";
+    }
+    //在Round_item原型中设置一个函数（在canvas的画布中把这个圆画出来），使创建出来的Round_item的实例对象中都有这个函数
+    Round_item.prototype.draw=function(){
+        content.fillStyle=this.color;
+        content.shadowBlur=this.r*2;
+        content.beginPath();
+        //0起始角，2*Math.PI结束角，顺势或逆势方向
+        content.arc(this.x,this.y,this.r,0,2*Math.PI,false);
+        content.fill();
+    }
+    function animate(){
+        content.clearRect(0,0,WIDTH,HEIGHT);
+        for(var i=0;i<round.length;i++){
+            round[i].move();
+        }
+        requestAnimationFrame(animate);
+    }
+
+    Round_item.prototype.move=function(){
+        this.y -=0.15;
+        if(this.y==-10){
+            this.y=HEIGHT+10;
+        }
+        this.draw();
+    }
+    function init(){
+        for(var i=0;i<initRoundPopulation;i++){
+            round[i]=new Round_item(i,Math.random()*WIDTH,Math.random()*HEIGHT);
+            round[i].draw();
+        }
+        animate();
+    }
+    init();
+
+</script>
+</body>
+</html>

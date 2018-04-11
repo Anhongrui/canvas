@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>时钟</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        #clock{
+            background: url("img/click.jpg") no-repeat;
+            background-size: 670px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+<canvas id="clock" height="500" width="500">
+您的浏览器不支持canvas
+</canvas>
+<script type="text/javascript">
+    var clock=document.getElementById("clock");
+    var pen=clock.getContext("2d");
+    function myClock(){
+        //定义表盘的时间
+        var myDate=new Date();
+        var hour=myDate.getHours();
+        var min=myDate.getMinutes();
+        var sec=myDate.getSeconds();
+        //三元运算，判断小时
+        hour>12?hour-12:hour;
+        hour+=(min/60);
+        pen.clearRect(0,0,clock.width,clock.height)
+        //绘制表盘
+        pen.save();
+        pen.beginPath();
+        pen.translate(250,250);
+        pen.arc(0,0,245,0,Math.PI*2,true);
+        pen.strokeStyle="aqua";
+        pen.lineWidth=7;
+        pen.closePath();
+        pen.stroke();
+        pen.restore();
+
+        //圆盘时针
+        for (var i= 0;i<12;i++){
+            pen.save();
+            pen.beginPath();
+            pen.translate(250,250);
+            pen.rotate(30*i*Math.PI/180);
+            pen.moveTo(0,-220);
+            pen.lineTo(0,-240);
+            pen.strokeStyle="aqua";
+            pen.lineWidth=7;
+            pen.closePath();
+            pen.stroke();
+            pen.restore();
+        }
+        //分针
+        for (var i= 0;i<60;i++){
+            pen.save();
+            pen.beginPath();
+            pen.translate(250,250);
+            pen.rotate(6*i*Math.PI/180);
+            pen.moveTo(0,-230);
+            pen.lineTo(0,-240);
+            pen.strokeStyle="aqua";
+            pen.lineWidth=5;
+            pen.closePath();
+            pen.stroke();
+            pen.restore();
+        }
+        //绘制时针
+        pen.save();
+        pen.beginPath();
+        //把画布的中心作为起始点
+        pen.translate(250,250);
+        pen.rotate(hour*30*Math.PI/180);
+        pen.moveTo(0,0);
+        pen.lineTo(0,-150);
+        pen.strokeStyle="red";
+        pen.lineWidth=7;
+        pen.closePath();
+        pen.stroke();
+        pen.restore();
+        //绘制分针
+        pen.save();
+        pen.beginPath();
+        pen.translate(250,250);
+        pen.rotate(min*6*Math.PI/180);
+        pen.moveTo(0,0);
+        pen.lineTo(0,-170);
+        pen.strokeStyle="blue";
+        pen.lineWidth=5;
+        pen.closePath();
+        pen.stroke();
+        pen.restore();
+        //绘制秒针
+        pen.save();
+        pen.beginPath();
+        pen.translate(250,250);
+        pen.rotate(sec*6*Math.PI/180);
+        pen.moveTo(0,0);
+        pen.lineTo(0,-190);
+        pen.strokeStyle="plum";
+        pen.lineWidth=3;
+        pen.closePath();
+        pen.stroke();
+        pen.restore();
+
+        pen.save();
+        pen.beginPath();
+        pen.translate(250,250);
+        pen.rotate(sec*6*Math.PI/180);
+        pen.arc(0,-170,5,0,Math.PI*2,false);
+        pen.strokeStyle="red";
+        pen.fillStyle="#fff";
+        pen.fill();
+        pen.lineWidth=3;
+        pen.closePath();
+        pen.stroke();
+        pen.restore();
+        //绘制圆心
+        pen.save();
+        pen.beginPath();
+        pen.arc(250,250,15,0,Math.PI*2,false);
+        pen.strokeStyle="yellow";
+        pen.fillStyle="#fff";
+        pen.fill();
+        pen.lineWidth=3;
+        pen.closePath();
+        pen.stroke();
+        pen.restore();
+        //填充文本
+        var h=myDate.getHours();
+        var str=(h>9?h:("0"+h))+":"+(min>9?min:("0"+min))+":"+(sec>9?min:("0"+sec));
+        pen.font="30px '微软雅黑'";
+        pen.fillText(str,195,440);
+    }
+    myClock();
+    setInterval(myClock,1000);
+</script>
+</body>
+</html>
